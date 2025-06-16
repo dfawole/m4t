@@ -1,0 +1,613 @@
+// http://localhost:8080/diagram-viewer.html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M4T System Diagrams Viewer</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8fafc;
+        }
+        h1, h2 {
+            color: #1e293b;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+        .diagram-container {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        svg {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+        .nav {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .nav a {
+            color: #3b82f6;
+            text-decoration: none;
+            margin-right: 20px;
+            font-weight: 500;
+        }
+        .nav a:hover {
+            text-decoration: underline;
+        }
+        .description {
+            background: #f1f5f9;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+            border-left: 4px solid #3b82f6;
+        }
+    </style>
+</head>
+<body>
+    <h1>M4T Learning Platform - System Architecture Diagrams</h1>
+    
+    <div class="nav">
+        <a href="#overview">System Overview</a>
+        <a href="#database">Database Schema</a>
+        <a href="#user-flow">User Flow</a>
+        <a href="#deployment">Deployment Flow</a>
+    </div>
+
+    <div id="overview" class="diagram-container">
+        <h2>System Overview Diagram</h2>
+        <div class="description">
+            Complete system architecture showing client-server communication, external services, and data flow.
+        </div>
+        <svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+            <!-- Background -->
+            <rect width="800" height="600" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+            
+            <!-- Title -->
+            <text x="400" y="30" text-anchor="middle" font-size="24" font-weight="bold" fill="#1e293b">
+                M4T Learning Platform - System Architecture
+            </text>
+            
+            <!-- Client Layer -->
+            <rect x="50" y="70" width="700" height="120" fill="#dbeafe" stroke="#3b82f6" stroke-width="2" rx="10"/>
+            <text x="400" y="95" text-anchor="middle" font-size="18" font-weight="bold" fill="#1e40af">CLIENT LAYER</text>
+            <text x="400" y="115" text-anchor="middle" font-size="14" fill="#1e40af">React Frontend (Vite Build)</text>
+            
+            <!-- Client Components -->
+            <rect x="70" y="125" width="120" height="50" fill="#93c5fd" stroke="#2563eb" rx="5"/>
+            <text x="130" y="145" text-anchor="middle" font-size="12" fill="#1e40af">Authentication</text>
+            <text x="130" y="160" text-anchor="middle" font-size="12" fill="#1e40af">&amp; Authorization</text>
+            
+            <rect x="210" y="125" width="120" height="50" fill="#93c5fd" stroke="#2563eb" rx="5"/>
+            <text x="270" y="145" text-anchor="middle" font-size="12" fill="#1e40af">Course</text>
+            <text x="270" y="160" text-anchor="middle" font-size="12" fill="#1e40af">Management</text>
+            
+            <rect x="350" y="125" width="120" height="50" fill="#93c5fd" stroke="#2563eb" rx="5"/>
+            <text x="410" y="145" text-anchor="middle" font-size="12" fill="#1e40af">Payment</text>
+            <text x="410" y="160" text-anchor="middle" font-size="12" fill="#1e40af">Processing</text>
+            
+            <rect x="490" y="125" width="120" height="50" fill="#93c5fd" stroke="#2563eb" rx="5"/>
+            <text x="550" y="145" text-anchor="middle" font-size="12" fill="#1e40af">Gamification</text>
+            <text x="550" y="160" text-anchor="middle" font-size="12" fill="#1e40af">Dashboard</text>
+            
+            <rect x="630" y="125" width="100" height="50" fill="#93c5fd" stroke="#2563eb" rx="5"/>
+            <text x="680" y="145" text-anchor="middle" font-size="12" fill="#1e40af">Real-time</text>
+            <text x="680" y="160" text-anchor="middle" font-size="12" fill="#1e40af">Analytics</text>
+            
+            <!-- Connection Line -->
+            <defs>
+                <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                    <polygon points="0 0, 10 3.5, 0 7" fill="#6b7280"/>
+                </marker>
+            </defs>
+            <line x1="400" y1="190" x2="400" y2="240" stroke="#6b7280" stroke-width="3" marker-end="url(#arrowhead)"/>
+            <text x="420" y="220" font-size="12" fill="#6b7280">HTTP/WebSocket</text>
+            
+            <!-- Server Layer -->
+            <rect x="50" y="260" width="700" height="160" fill="#dcfce7" stroke="#16a34a" stroke-width="2" rx="10"/>
+            <text x="400" y="285" text-anchor="middle" font-size="18" font-weight="bold" fill="#15803d">SERVER LAYER</text>
+            <text x="400" y="305" text-anchor="middle" font-size="14" fill="#15803d">Express.js API Server with TypeScript</text>
+            
+            <!-- Server Components -->
+            <rect x="70" y="320" width="100" height="40" fill="#86efac" stroke="#16a34a" rx="5"/>
+            <text x="120" y="335" text-anchor="middle" font-size="11" fill="#15803d">JWT Auth</text>
+            <text x="120" y="350" text-anchor="middle" font-size="11" fill="#15803d">Middleware</text>
+            
+            <rect x="190" y="320" width="100" height="40" fill="#86efac" stroke="#16a34a" rx="5"/>
+            <text x="240" y="335" text-anchor="middle" font-size="11" fill="#15803d">API Routes</text>
+            <text x="240" y="350" text-anchor="middle" font-size="11" fill="#15803d">Handler</text>
+            
+            <rect x="310" y="320" width="100" height="40" fill="#86efac" stroke="#16a34a" rx="5"/>
+            <text x="360" y="335" text-anchor="middle" font-size="11" fill="#15803d">Business</text>
+            <text x="360" y="350" text-anchor="middle" font-size="11" fill="#15803d">Logic</text>
+            
+            <rect x="430" y="320" width="100" height="40" fill="#86efac" stroke="#16a34a" rx="5"/>
+            <text x="480" y="335" text-anchor="middle" font-size="11" fill="#15803d">Data Access</text>
+            <text x="480" y="350" text-anchor="middle" font-size="11" fill="#15803d">Layer</text>
+            
+            <rect x="550" y="320" width="100" height="40" fill="#86efac" stroke="#16a34a" rx="5"/>
+            <text x="600" y="335" text-anchor="middle" font-size="11" fill="#15803d">External</text>
+            <text x="600" y="350" text-anchor="middle" font-size="11" fill="#15803d">Services</text>
+            
+            <!-- Connection to Database -->
+            <line x1="480" y1="380" x2="480" y2="420" stroke="#6b7280" stroke-width="3" marker-end="url(#arrowhead)"/>
+            <text x="490" y="405" font-size="12" fill="#6b7280">SQL</text>
+            
+            <!-- Database Layer -->
+            <rect x="50" y="440" width="700" height="100" fill="#fef3c7" stroke="#f59e0b" stroke-width="2" rx="10"/>
+            <text x="400" y="465" text-anchor="middle" font-size="18" font-weight="bold" fill="#92400e">DATABASE LAYER</text>
+            <text x="400" y="485" text-anchor="middle" font-size="14" fill="#92400e">PostgreSQL with Drizzle ORM</text>
+            
+            <!-- Database Components -->
+            <rect x="100" y="500" width="120" height="30" fill="#fcd34d" stroke="#f59e0b" rx="5"/>
+            <text x="160" y="520" text-anchor="middle" font-size="12" fill="#92400e">User Management</text>
+            
+            <rect x="240" y="500" width="120" height="30" fill="#fcd34d" stroke="#f59e0b" rx="5"/>
+            <text x="300" y="520" text-anchor="middle" font-size="12" fill="#92400e">Course Data</text>
+            
+            <rect x="380" y="500" width="120" height="30" fill="#fcd34d" stroke="#f59e0b" rx="5"/>
+            <text x="440" y="520" text-anchor="middle" font-size="12" fill="#92400e">Analytics</text>
+            
+            <rect x="520" y="500" width="120" height="30" fill="#fcd34d" stroke="#f59e0b" rx="5"/>
+            <text x="580" y="520" text-anchor="middle" font-size="12" fill="#92400e">Gamification</text>
+            
+            <!-- External Services -->
+            <rect x="50" y="560" width="150" height="30" fill="#f3e8ff" stroke="#8b5cf6" rx="5"/>
+            <text x="125" y="580" text-anchor="middle" font-size="12" fill="#7c3aed">Stripe Payments</text>
+            
+            <rect x="220" y="560" width="150" height="30" fill="#f3e8ff" stroke="#8b5cf6" rx="5"/>
+            <text x="295" y="580" text-anchor="middle" font-size="12" fill="#7c3aed">SendGrid Email</text>
+            
+            <rect x="390" y="560" width="150" height="30" fill="#f3e8ff" stroke="#8b5cf6" rx="5"/>
+            <text x="465" y="580" text-anchor="middle" font-size="12" fill="#7c3aed">OpenAI API</text>
+            
+            <rect x="560" y="560" width="150" height="30" fill="#f3e8ff" stroke="#8b5cf6" rx="5"/>
+            <text x="635" y="580" text-anchor="middle" font-size="12" fill="#7c3aed">PayPal Payments</text>
+        </svg>
+    </div>
+
+    <div id="database" class="diagram-container">
+        <h2>Database Schema Diagram</h2>
+        <div class="description">
+            Entity-relationship diagram showing all database tables and their relationships.
+        </div>
+        <svg width="900" height="700" xmlns="http://www.w3.org/2000/svg">
+            <!-- Background -->
+            <rect width="900" height="700" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+            
+            <!-- Title -->
+            <text x="450" y="30" text-anchor="middle" font-size="24" font-weight="bold" fill="#1e293b">
+                M4T Learning Platform - Database Schema
+            </text>
+            
+            <!-- Users Table -->
+            <rect x="50" y="60" width="200" height="180" fill="#dbeafe" stroke="#3b82f6" stroke-width="2" rx="5"/>
+            <text x="150" y="80" text-anchor="middle" font-size="16" font-weight="bold" fill="#1e40af">users</text>
+            <line x1="60" y1="90" x2="240" y2="90" stroke="#3b82f6" stroke-width="1"/>
+            <text x="65" y="110" font-size="12" fill="#1e40af">id (PK)</text>
+            <text x="65" y="125" font-size="12" fill="#1e40af">email</text>
+            <text x="65" y="140" font-size="12" fill="#1e40af">password</text>
+            <text x="65" y="155" font-size="12" fill="#1e40af">role</text>
+            <text x="65" y="170" font-size="12" fill="#1e40af">firstName</text>
+            <text x="65" y="185" font-size="12" fill="#1e40af">lastName</text>
+            <text x="65" y="200" font-size="12" fill="#1e40af">isActive</text>
+            <text x="65" y="215" font-size="12" fill="#1e40af">createdAt</text>
+            
+            <!-- Courses Table -->
+            <rect x="300" y="60" width="200" height="200" fill="#dcfce7" stroke="#16a34a" stroke-width="2" rx="5"/>
+            <text x="400" y="80" text-anchor="middle" font-size="16" font-weight="bold" fill="#15803d">courses</text>
+            <line x1="310" y1="90" x2="490" y2="90" stroke="#16a34a" stroke-width="1"/>
+            <text x="315" y="110" font-size="12" fill="#15803d">id (PK)</text>
+            <text x="315" y="125" font-size="12" fill="#15803d">title</text>
+            <text x="315" y="140" font-size="12" fill="#15803d">description</text>
+            <text x="315" y="155" font-size="12" fill="#15803d">price</text>
+            <text x="315" y="170" font-size="12" fill="#15803d">instructorId (FK)</text>
+            <text x="315" y="185" font-size="12" fill="#15803d">categoryId (FK)</text>
+            <text x="315" y="200" font-size="12" fill="#15803d">isPublished</text>
+            <text x="315" y="215" font-size="12" fill="#15803d">difficulty</text>
+            <text x="315" y="230" font-size="12" fill="#15803d">duration</text>
+            <text x="315" y="245" font-size="12" fill="#15803d">createdAt</text>
+            
+            <!-- Enrollments Table -->
+            <rect x="550" y="60" width="200" height="160" fill="#fef3c7" stroke="#f59e0b" stroke-width="2" rx="5"/>
+            <text x="650" y="80" text-anchor="middle" font-size="16" font-weight="bold" fill="#92400e">enrollments</text>
+            <line x1="560" y1="90" x2="740" y2="90" stroke="#f59e0b" stroke-width="1"/>
+            <text x="565" y="110" font-size="12" fill="#92400e">id (PK)</text>
+            <text x="565" y="125" font-size="12" fill="#92400e">userId (FK)</text>
+            <text x="565" y="140" font-size="12" fill="#92400e">courseId (FK)</text>
+            <text x="565" y="155" font-size="12" fill="#92400e">enrolledAt</text>
+            <text x="565" y="170" font-size="12" fill="#92400e">progress</text>
+            <text x="565" y="185" font-size="12" fill="#92400e">completedAt</text>
+            <text x="565" y="200" font-size="12" fill="#92400e">status</text>
+            
+            <!-- Categories Table -->
+            <rect x="50" y="280" width="200" height="120" fill="#f3e8ff" stroke="#8b5cf6" stroke-width="2" rx="5"/>
+            <text x="150" y="300" text-anchor="middle" font-size="16" font-weight="bold" fill="#7c3aed">categories</text>
+            <line x1="60" y1="310" x2="240" y2="310" stroke="#8b5cf6" stroke-width="1"/>
+            <text x="65" y="330" font-size="12" fill="#7c3aed">id (PK)</text>
+            <text x="65" y="345" font-size="12" fill="#7c3aed">name</text>
+            <text x="65" y="360" font-size="12" fill="#7c3aed">description</text>
+            <text x="65" y="375" font-size="12" fill="#7c3aed">isActive</text>
+            
+            <!-- Lessons Table -->
+            <rect x="300" y="300" width="200" height="180" fill="#fed7d7" stroke="#f56565" stroke-width="2" rx="5"/>
+            <text x="400" y="320" text-anchor="middle" font-size="16" font-weight="bold" fill="#c53030">lessons</text>
+            <line x1="310" y1="330" x2="490" y2="330" stroke="#f56565" stroke-width="1"/>
+            <text x="315" y="350" font-size="12" fill="#c53030">id (PK)</text>
+            <text x="315" y="365" font-size="12" fill="#c53030">courseId (FK)</text>
+            <text x="315" y="380" font-size="12" fill="#c53030">title</text>
+            <text x="315" y="395" font-size="12" fill="#c53030">content</text>
+            <text x="315" y="410" font-size="12" fill="#c53030">videoUrl</text>
+            <text x="315" y="425" font-size="12" fill="#c53030">duration</text>
+            <text x="315" y="440" font-size="12" fill="#c53030">order</text>
+            <text x="315" y="455" font-size="12" fill="#c53030">isPublished</text>
+            
+            <!-- Payments Table -->
+            <rect x="550" y="280" width="200" height="160" fill="#e6fffa" stroke="#38b2ac" stroke-width="2" rx="5"/>
+            <text x="650" y="300" text-anchor="middle" font-size="16" font-weight="bold" fill="#2c7a7b">payments</text>
+            <line x1="560" y1="310" x2="740" y2="310" stroke="#38b2ac" stroke-width="1"/>
+            <text x="565" y="330" font-size="12" fill="#2c7a7b">id (PK)</text>
+            <text x="565" y="345" font-size="12" fill="#2c7a7b">userId (FK)</text>
+            <text x="565" y="360" font-size="12" fill="#2c7a7b">courseId (FK)</text>
+            <text x="565" y="375" font-size="12" fill="#2c7a7b">amount</text>
+            <text x="565" y="390" font-size="12" fill="#2c7a7b">stripeSessionId</text>
+            <text x="565" y="405" font-size="12" fill="#2c7a7b">status</text>
+            <text x="565" y="420" font-size="12" fill="#2c7a7b">paymentDate</text>
+            
+            <!-- User Badges Table -->
+            <rect x="50" y="450" width="200" height="140" fill="#ffeaa7" stroke="#fdcb6e" stroke-width="2" rx="5"/>
+            <text x="150" y="470" text-anchor="middle" font-size="16" font-weight="bold" fill="#e17055">user_badges</text>
+            <line x1="60" y1="480" x2="240" y2="480" stroke="#fdcb6e" stroke-width="1"/>
+            <text x="65" y="500" font-size="12" fill="#e17055">id (PK)</text>
+            <text x="65" y="515" font-size="12" fill="#e17055">userId (FK)</text>
+            <text x="65" y="530" font-size="12" fill="#e17055">badgeId (FK)</text>
+            <text x="65" y="545" font-size="12" fill="#e17055">earnedAt</text>
+            <text x="65" y="560" font-size="12" fill="#e17055">progress</text>
+            <text x="65" y="575" font-size="12" fill="#e17055">isActive</text>
+            
+            <!-- Badges Table -->
+            <rect x="300" y="520" width="200" height="140" fill="#fab1a0" stroke="#e17055" stroke-width="2" rx="5"/>
+            <text x="400" y="540" text-anchor="middle" font-size="16" font-weight="bold" fill="#d63031">badges</text>
+            <line x1="310" y1="550" x2="490" y2="550" stroke="#e17055" stroke-width="1"/>
+            <text x="315" y="570" font-size="12" fill="#d63031">id (PK)</text>
+            <text x="315" y="585" font-size="12" fill="#d63031">name</text>
+            <text x="315" y="600" font-size="12" fill="#d63031">description</text>
+            <text x="315" y="615" font-size="12" fill="#d63031">icon</text>
+            <text x="315" y="630" font-size="12" fill="#d63031">requirement</text>
+            <text x="315" y="645" font-size="12" fill="#d63031">points</text>
+            
+            <!-- Analytics Table -->
+            <rect x="550" y="480" width="200" height="160" fill="#d1ecf1" stroke="#17a2b8" stroke-width="2" rx="5"/>
+            <text x="650" y="500" text-anchor="middle" font-size="16" font-weight="bold" fill="#138496">analytics</text>
+            <line x1="560" y1="510" x2="740" y2="510" stroke="#17a2b8" stroke-width="1"/>
+            <text x="565" y="530" font-size="12" fill="#138496">id (PK)</text>
+            <text x="565" y="545" font-size="12" fill="#138496">userId (FK)</text>
+            <text x="565" y="560" font-size="12" fill="#138496">courseId (FK)</text>
+            <text x="565" y="575" font-size="12" fill="#138496">lessonId (FK)</text>
+            <text x="565" y="590" font-size="12" fill="#138496">eventType</text>
+            <text x="565" y="605" font-size="12" fill="#138496">duration</text>
+            <text x="565" y="620" font-size="12" fill="#138496">timestamp</text>
+            
+            <!-- Relationship Lines -->
+            <defs>
+                <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                    <polygon points="0 0, 8 3, 0 6" fill="#6b7280"/>
+                </marker>
+            </defs>
+            
+            <!-- Users to Enrollments -->
+            <line x1="250" y1="150" x2="550" y2="150" stroke="#6b7280" stroke-width="2" marker-end="url(#arrow)"/>
+            
+            <!-- Courses to Enrollments -->
+            <line x1="500" y1="160" x2="550" y2="160" stroke="#6b7280" stroke-width="2" marker-end="url(#arrow)"/>
+            
+            <!-- Categories to Courses -->
+            <line x1="250" y1="340" x2="300" y2="185" stroke="#6b7280" stroke-width="2" marker-end="url(#arrow)"/>
+            
+            <!-- Courses to Lessons -->
+            <line x1="400" y1="260" x2="400" y2="300" stroke="#6b7280" stroke-width="2" marker-end="url(#arrow)"/>
+            
+            <!-- Users to Payments -->
+            <line x1="250" y1="200" x2="550" y2="360" stroke="#6b7280" stroke-width="2" marker-end="url(#arrow)"/>
+            
+            <!-- Users to User Badges -->
+            <line x1="150" y1="240" x2="150" y2="450" stroke="#6b7280" stroke-width="2" marker-end="url(#arrow)"/>
+            
+            <!-- Badges to User Badges -->
+            <line x1="300" y1="590" x2="250" y2="520" stroke="#6b7280" stroke-width="2" marker-end="url(#arrow)"/>
+        </svg>
+    </div>
+
+    <div id="user-flow" class="diagram-container">
+        <h2>User Flow Diagram</h2>
+        <div class="description">
+            Complete user journey from registration to course completion with gamification elements.
+        </div>
+        <svg width="1000" height="800" xmlns="http://www.w3.org/2000/svg">
+            <!-- Background -->
+            <rect width="1000" height="800" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+            
+            <!-- Title -->
+            <text x="500" y="30" text-anchor="middle" font-size="24" font-weight="bold" fill="#1e293b">
+                M4T Learning Platform - User Flow
+            </text>
+            
+            <!-- Start -->
+            <circle cx="100" cy="80" r="30" fill="#10b981" stroke="#065f46" stroke-width="3"/>
+            <text x="100" y="85" text-anchor="middle" font-size="12" font-weight="bold" fill="white">START</text>
+            
+            <!-- Registration/Login -->
+            <rect x="50" y="150" width="100" height="60" fill="#dbeafe" stroke="#3b82f6" stroke-width="2" rx="10"/>
+            <text x="100" y="175" text-anchor="middle" font-size="12" fill="#1e40af">User</text>
+            <text x="100" y="190" text-anchor="middle" font-size="12" fill="#1e40af">Registration</text>
+            <text x="100" y="205" text-anchor="middle" font-size="12" fill="#1e40af">/ Login</text>
+            
+            <!-- Dashboard -->
+            <rect x="200" y="150" width="100" height="60" fill="#dcfce7" stroke="#16a34a" stroke-width="2" rx="10"/>
+            <text x="250" y="175" text-anchor="middle" font-size="12" fill="#15803d">Dashboard</text>
+            <text x="250" y="190" text-anchor="middle" font-size="12" fill="#15803d">Overview</text>
+            
+            <!-- Course Browse -->
+            <rect x="350" y="150" width="100" height="60" fill="#fef3c7" stroke="#f59e0b" stroke-width="2" rx="10"/>
+            <text x="400" y="175" text-anchor="middle" font-size="12" fill="#92400e">Browse</text>
+            <text x="400" y="190" text-anchor="middle" font-size="12" fill="#92400e">Courses</text>
+            
+            <!-- Course Details -->
+            <rect x="500" y="150" width="100" height="60" fill="#f3e8ff" stroke="#8b5cf6" stroke-width="2" rx="10"/>
+            <text x="550" y="175" text-anchor="middle" font-size="12" fill="#7c3aed">Course</text>
+            <text x="550" y="190" text-anchor="middle" font-size="12" fill="#7c3aed">Details</text>
+            
+            <!-- Payment -->
+            <rect x="650" y="150" width="100" height="60" fill="#fed7d7" stroke="#f56565" stroke-width="2" rx="10"/>
+            <text x="700" y="175" text-anchor="middle" font-size="12" fill="#c53030">Payment</text>
+            <text x="700" y="190" text-anchor="middle" font-size="12" fill="#c53030">Processing</text>
+            
+            <!-- Enrollment Success -->
+            <rect x="800" y="150" width="100" height="60" fill="#e6fffa" stroke="#38b2ac" stroke-width="2" rx="10"/>
+            <text x="850" y="175" text-anchor="middle" font-size="12" fill="#2c7a7b">Enrollment</text>
+            <text x="850" y="190" text-anchor="middle" font-size="12" fill="#2c7a7b">Success</text>
+            
+            <!-- Learning Path -->
+            <rect x="200" y="280" width="100" height="60" fill="#ffeaa7" stroke="#fdcb6e" stroke-width="2" rx="10"/>
+            <text x="250" y="305" text-anchor="middle" font-size="12" fill="#e17055">Learning</text>
+            <text x="250" y="320" text-anchor="middle" font-size="12" fill="#e17055">Path</text>
+            
+            <!-- Lesson View -->
+            <rect x="350" y="280" width="100" height="60" fill="#fab1a0" stroke="#e17055" stroke-width="2" rx="10"/>
+            <text x="400" y="305" text-anchor="middle" font-size="12" fill="#d63031">Lesson</text>
+            <text x="400" y="320" text-anchor="middle" font-size="12" fill="#d63031">Content</text>
+            
+            <!-- Progress Tracking -->
+            <rect x="500" y="280" width="100" height="60" fill="#d1ecf1" stroke="#17a2b8" stroke-width="2" rx="10"/>
+            <text x="550" y="305" text-anchor="middle" font-size="12" fill="#138496">Progress</text>
+            <text x="550" y="320" text-anchor="middle" font-size="12" fill="#138496">Tracking</text>
+            
+            <!-- Quiz/Assessment -->
+            <rect x="650" y="280" width="100" height="60" fill="#ffe8cc" stroke="#ff8c42" stroke-width="2" rx="10"/>
+            <text x="700" y="305" text-anchor="middle" font-size="12" fill="#d63031">Quiz /</text>
+            <text x="700" y="320" text-anchor="middle" font-size="12" fill="#d63031">Assessment</text>
+            
+            <!-- Badge Earned -->
+            <rect x="200" y="410" width="100" height="60" fill="#fff3cd" stroke="#ffc107" stroke-width="2" rx="10"/>
+            <text x="250" y="435" text-anchor="middle" font-size="12" fill="#856404">Badge</text>
+            <text x="250" y="450" text-anchor="middle" font-size="12" fill="#856404">Earned</text>
+            
+            <!-- Course Completion -->
+            <rect x="350" y="410" width="100" height="60" fill="#d4edda" stroke="#28a745" stroke-width="2" rx="10"/>
+            <text x="400" y="435" text-anchor="middle" font-size="12" fill="#155724">Course</text>
+            <text x="400" y="450" text-anchor="middle" font-size="12" fill="#155724">Completion</text>
+            
+            <!-- Certificate -->
+            <rect x="500" y="410" width="100" height="60" fill="#f8d7da" stroke="#dc3545" stroke-width="2" rx="10"/>
+            <text x="550" y="435" text-anchor="middle" font-size="12" fill="#721c24">Certificate</text>
+            <text x="550" y="450" text-anchor="middle" font-size="12" fill="#721c24">Generated</text>
+            
+            <!-- Analytics -->
+            <rect x="650" y="410" width="100" height="60" fill="#e2e3e5" stroke="#6c757d" stroke-width="2" rx="10"/>
+            <text x="700" y="435" text-anchor="middle" font-size="12" fill="#495057">Analytics</text>
+            <text x="700" y="450" text-anchor="middle" font-size="12" fill="#495057">Updated</text>
+            
+            <!-- Recommendation Engine -->
+            <rect x="200" y="540" width="100" height="60" fill="#cfe2ff" stroke="#0d6efd" stroke-width="2" rx="10"/>
+            <text x="250" y="565" text-anchor="middle" font-size="12" fill="#084298">AI</text>
+            <text x="250" y="580" text-anchor="middle" font-size="12" fill="#084298">Recommendations</text>
+            
+            <!-- Next Course -->
+            <rect x="350" y="540" width="100" height="60" fill="#e7f3ff" stroke="#007bff" stroke-width="2" rx="10"/>
+            <text x="400" y="565" text-anchor="middle" font-size="12" fill="#0056b3">Next Course</text>
+            <text x="400" y="580" text-anchor="middle" font-size="12" fill="#0056b3">Suggestion</text>
+            
+            <!-- User Profile -->
+            <rect x="500" y="540" width="100" height="60" fill="#fff0f5" stroke="#ff69b4" stroke-width="2" rx="10"/>
+            <text x="550" y="565" text-anchor="middle" font-size="12" fill="#c71585">Profile</text>
+            <text x="550" y="580" text-anchor="middle" font-size="12" fill="#c71585">Update</text>
+            
+            <!-- Community -->
+            <rect x="650" y="540" width="100" height="60" fill="#f0f8ff" stroke="#4169e1" stroke-width="2" rx="10"/>
+            <text x="700" y="565" text-anchor="middle" font-size="12" fill="#191970">Community</text>
+            <text x="700" y="580" text-anchor="middle" font-size="12" fill="#191970">Interaction</text>
+            
+            <!-- Flow Arrows -->
+            <defs>
+                <marker id="flowArrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                    <polygon points="0 0, 8 3, 0 6" fill="#374151"/>
+                </marker>
+            </defs>
+            
+            <!-- Main Flow -->
+            <line x1="100" y1="110" x2="100" y2="150" stroke="#374151" stroke-width="2" marker-end="url(#flowArrow)"/>
+            <line x1="150" y1="180" x2="200" y2="180" stroke="#374151" stroke-width="2" marker-end="url(#flowArrow)"/>
+            <line x1="300" y1="180" x2="350" y2="180" stroke="#374151" stroke-width="2" marker-end="url(#flowArrow)"/>
+            <line x1="450" y1="180" x2="500" y2="180" stroke="#374151" stroke-width="2" marker-end="url(#flowArrow)"/>
+            <line x1="600" y1="180" x2="650" y2="180" stroke="#374151" stroke-width="2" marker-end="url(#flowArrow)"/>
+            <line x1="750" y1="180" x2="800" y2="180" stroke="#374151" stroke-width="2" marker-end="url(#flowArrow)"/>
+            
+            <!-- To Learning Path -->
+            <line x1="250" y1="210" x2="250" y2="280" stroke="#374151" stroke-width="2" marker-end="url(#flowArrow)"/>
+            <line x1="300" y1="310" x2="350" y2="310" stroke="#374151" stroke-width="2" marker-end="url(#flowArrow)"/>
+            <line x1="450" y1="310" x2="500" y2="310" stroke="#374151" stroke-width="2" marker-end="url(#flowArrow)"/>
+            <line x1="600" y1="310" x2="650" y2="310" stroke="#374151" stroke-width="2" marker-end="url(#flowArrow)"/>
+            
+            <!-- To Gamification -->
+            <line x1="250" y1="340" x2="250" y2="410" stroke="#374151" stroke-width="2" marker-end="url(#flowArrow)"/>
+            <line x1="300" y1="440" x2="350" y2="440" stroke="#374151" stroke-width="2" marker-end="url(#flowArrow)"/>
+            <line x1="450" y1="440" x2="500" y2="440" stroke="#374151" stroke-width="2" marker-end="url(#flowArrow)"/>
+            <line x1="600" y1="440" x2="650" y2="440" stroke="#374151" stroke-width="2" marker-end="url(#flowArrow)"/>
+            
+            <!-- To Recommendations -->
+            <line x1="250" y1="470" x2="250" y2="540" stroke="#374151" stroke-width="2" marker-end="url(#flowArrow)"/>
+            <line x1="300" y1="570" x2="350" y2="570" stroke="#374151" stroke-width="2" marker-end="url(#flowArrow)"/>
+            <line x1="450" y1="570" x2="500" y2="570" stroke="#374151" stroke-width="2" marker-end="url(#flowArrow)"/>
+            <line x1="600" y1="570" x2="650" y2="570" stroke="#374151" stroke-width="2" marker-end="url(#flowArrow)"/>
+            
+            <!-- Loop back to course browse -->
+            <path d="M 400 600 Q 400 650 100 650 Q 50 650 50 400 Q 50 200 350 180" fill="none" stroke="#28a745" stroke-width="2" stroke-dasharray="5,5" marker-end="url(#flowArrow)"/>
+            <text x="200" y="670" text-anchor="middle" font-size="11" fill="#28a745">Continuous Learning Loop</text>
+        </svg>
+    </div>
+
+    <div id="deployment" class="diagram-container">
+        <h2>Deployment Architecture</h2>
+        <div class="description">
+            Multi-platform deployment architecture showing Railway, Vercel, and Heroku configurations.
+        </div>
+        <svg width="900" height="600" xmlns="http://www.w3.org/2000/svg">
+            <!-- Background -->
+            <rect width="900" height="600" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+            
+            <!-- Title -->
+            <text x="450" y="30" text-anchor="middle" font-size="24" font-weight="bold" fill="#1e293b">
+                M4T Learning Platform - Deployment Architecture
+            </text>
+            
+            <!-- Source Code -->
+            <rect x="350" y="60" width="200" height="80" fill="#f3f4f6" stroke="#6b7280" stroke-width="2" rx="10"/>
+            <text x="450" y="85" text-anchor="middle" font-size="16" font-weight="bold" fill="#374151">Source Code</text>
+            <text x="450" y="105" text-anchor="middle" font-size="12" fill="#374151">GitHub Repository</text>
+            <text x="450" y="120" text-anchor="middle" font-size="12" fill="#374151">TypeScript + React + Express</text>
+            
+            <!-- Railway Deployment -->
+            <rect x="50" y="200" width="200" height="120" fill="#dbeafe" stroke="#3b82f6" stroke-width="2" rx="10"/>
+            <text x="150" y="225" text-anchor="middle" font-size="16" font-weight="bold" fill="#1e40af">Railway</text>
+            <text x="150" y="245" text-anchor="middle" font-size="12" fill="#1e40af">Full-Stack Deployment</text>
+            <text x="150" y="265" text-anchor="middle" font-size="12" fill="#1e40af">• Auto-scaling</text>
+            <text x="150" y="280" text-anchor="middle" font-size="12" fill="#1e40af">• PostgreSQL included</text>
+            <text x="150" y="295" text-anchor="middle" font-size="12" fill="#1e40af">• Zero-config deployment</text>
+            
+            <!-- Vercel Deployment -->
+            <rect x="350" y="200" width="200" height="120" fill="#dcfce7" stroke="#16a34a" stroke-width="2" rx="10"/>
+            <text x="450" y="225" text-anchor="middle" font-size="16" font-weight="bold" fill="#15803d">Vercel</text>
+            <text x="450" y="245" text-anchor="middle" font-size="12" fill="#15803d">Frontend + Serverless API</text>
+            <text x="450" y="265" text-anchor="middle" font-size="12" fill="#15803d">• Edge functions</text>
+            <text x="450" y="280" text-anchor="middle" font-size="12" fill="#15803d">• Global CDN</text>
+            <text x="450" y="295" text-anchor="middle" font-size="12" fill="#15803d">• External DB required</text>
+            
+            <!-- Heroku Deployment -->
+            <rect x="650" y="200" width="200" height="120" fill="#fef3c7" stroke="#f59e0b" stroke-width="2" rx="10"/>
+            <text x="750" y="225" text-anchor="middle" font-size="16" font-weight="bold" fill="#92400e">Heroku</text>
+            <text x="750" y="245" text-anchor="middle" font-size="12" fill="#92400e">Container Deployment</text>
+            <text x="750" y="265" text-anchor="middle" font-size="12" fill="#92400e">• Dyno-based scaling</text>
+            <text x="750" y="280" text-anchor="middle" font-size="12" fill="#92400e">• Add-on ecosystem</text>
+            <text x="750" y="295" text-anchor="middle" font-size="12" fill="#92400e">• PostgreSQL add-on</text>
+            
+            <!-- Database Layer -->
+            <rect x="50" y="380" width="800" height="80" fill="#f3e8ff" stroke="#8b5cf6" stroke-width="2" rx="10"/>
+            <text x="450" y="405" text-anchor="middle" font-size="18" font-weight="bold" fill="#7c3aed">Database Layer</text>
+            
+            <!-- Database Options -->
+            <rect x="100" y="420" width="150" height="40" fill="#e879f9" stroke="#c026d3" rx="5"/>
+            <text x="175" y="445" text-anchor="middle" font-size="12" fill="#86198f">Railway PostgreSQL</text>
+            
+            <rect x="275" y="420" width="150" height="40" fill="#e879f9" stroke="#c026d3" rx="5"/>
+            <text x="350" y="445" text-anchor="middle" font-size="12" fill="#86198f">Neon Database</text>
+            
+            <rect x="450" y="420" width="150" height="40" fill="#e879f9" stroke="#c026d3" rx="5"/>
+            <text x="525" y="445" text-anchor="middle" font-size="12" fill="#86198f">Supabase</text>
+            
+            <rect x="625" y="420" width="150" height="40" fill="#e879f9" stroke="#c026d3" rx="5"/>
+            <text x="700" y="445" text-anchor="middle" font-size="12" fill="#86198f">Heroku Postgres</text>
+            
+            <!-- External Services -->
+            <rect x="50" y="500" width="800" height="80" fill="#fed7d7" stroke="#f56565" stroke-width="2" rx="10"/>
+            <text x="450" y="525" text-anchor="middle" font-size="18" font-weight="bold" fill="#c53030">External Services</text>
+            
+            <rect x="100" y="540" width="120" height="30" fill="#fc8181" stroke="#e53e3e" rx="5"/>
+            <text x="160" y="560" text-anchor="middle" font-size="11" fill="#742a2a">Stripe Payments</text>
+            
+            <rect x="240" y="540" width="120" height="30" fill="#fc8181" stroke="#e53e3e" rx="5"/>
+            <text x="300" y="560" text-anchor="middle" font-size="11" fill="#742a2a">SendGrid Email</text>
+            
+            <rect x="380" y="540" width="120" height="30" fill="#fc8181" stroke="#e53e3e" rx="5"/>
+            <text x="440" y="560" text-anchor="middle" font-size="11" fill="#742a2a">OpenAI API</text>
+            
+            <rect x="520" y="540" width="120" height="30" fill="#fc8181" stroke="#e53e3e" rx="5"/>
+            <text x="580" y="560" text-anchor="middle" font-size="11" fill="#742a2a">PayPal SDK</text>
+            
+            <rect x="660" y="540" width="120" height="30" fill="#fc8181" stroke="#e53e3e" rx="5"/>
+            <text x="720" y="560" text-anchor="middle" font-size="11" fill="#742a2a">OAuth Providers</text>
+            
+            <!-- Deployment Arrows -->
+            <defs>
+                <marker id="deployArrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                    <polygon points="0 0, 10 3.5, 0 7" fill="#6b7280"/>
+                </marker>
+            </defs>
+            
+            <!-- From source to platforms -->
+            <line x1="400" y1="140" x2="150" y2="200" stroke="#6b7280" stroke-width="2" marker-end="url(#deployArrow)"/>
+            <line x1="450" y1="140" x2="450" y2="200" stroke="#6b7280" stroke-width="2" marker-end="url(#deployArrow)"/>
+            <line x1="500" y1="140" x2="750" y2="200" stroke="#6b7280" stroke-width="2" marker-end="url(#deployArrow)"/>
+            
+            <!-- From platforms to database -->
+            <line x1="150" y1="320" x2="175" y2="420" stroke="#6b7280" stroke-width="2" marker-end="url(#deployArrow)"/>
+            <line x1="450" y1="320" x2="350" y2="420" stroke="#6b7280" stroke-width="2" marker-end="url(#deployArrow)"/>
+            <line x1="750" y1="320" x2="700" y2="420" stroke="#6b7280" stroke-width="2" marker-end="url(#deployArrow)"/>
+            
+            <!-- Platform URLs -->
+            <text x="150" y="345" text-anchor="middle" font-size="10" fill="#3b82f6">*.railway.app</text>
+            <text x="450" y="345" text-anchor="middle" font-size="10" fill="#16a34a">*.vercel.app</text>
+            <text x="750" y="345" text-anchor="middle" font-size="10" fill="#f59e0b">*.herokuapp.com</text>
+        </svg>
+    </div>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('.nav a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            });
+        });
+
+        // Add some interactivity to diagrams
+        document.querySelectorAll('svg rect, svg circle').forEach(element => {
+            element.addEventListener('mouseenter', function() {
+                this.style.opacity = '0.8';
+                this.style.cursor = 'pointer';
+            });
+            
+            element.addEventListener('mouseleave', function() {
+                this.style.opacity = '1';
+            });
+        });
+    </script>
+</body>
+</html>

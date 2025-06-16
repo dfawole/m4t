@@ -1,0 +1,737 @@
+import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useToast } from "@/hooks/use-toast";
+import { useLocation } from "wouter";
+import { SubscriptionPlan } from "@shared/schema";
+
+interface TierComparisonWizardProps {
+  courseId?: string | null;
+  courseTitle?: string;
+}
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
+import {
+  ArrowRight,
+  CheckCircle,
+  Users,
+  Briefcase,
+  User,
+  BarChart3,
+  Calendar,
+  CreditCard,
+  Shield,
+} from "lucide-react";
+
+const INDIVIDUAL_FEATURES = {
+  basic: ["10 courses per month", "Basic analytics", "Email support"],
+  pro: [
+    "Unlimited courses",
+    "Advanced analytics",
+    "Priority support",
+    "Course certificates",
+  ],
+  annual: [
+    "Unlimited courses",
+    "Advanced analytics",
+    "Priority support",
+    "Course certificates",
+    "20% savings compared to monthly",
+  ],
+};
+
+const BUSINESS_FEATURES = {
+  team: [
+    "10 user licenses",
+    "Team management",
+    "Basic reporting",
+    "Email support",
+  ],
+  business: [
+    "25 user licenses",
+    "Advanced team management",
+    "Custom learning paths",
+    "Advanced reporting",
+    "Priority support",
+  ],
+  enterprise: [
+    "Unlimited user licenses",
+    "Dedicated account manager",
+    "Custom integrations",
+    "API access",
+    "SSO authentication",
+    "Enterprise-grade security",
+  ],
+};
+
+interface PlanFeature {
+  icon: JSX.Element;
+  title: string;
+  basic: string | boolean;
+  pro: string | boolean;
+  annual: string | boolean;
+}
+
+interface TeamPlanFeature {
+  icon: JSX.Element;
+  title: string;
+  team: string | boolean;
+  business: string | boolean;
+  enterprise: string | boolean;
+}
+
+interface SingleCoursePlanFeature {
+  icon: JSX.Element;
+  title: string;
+  singleCourse: string | boolean;
+  basic: string | boolean;
+  pro: string | boolean;
+  annual: string | boolean;
+}
+
+const INDIVIDUAL_FEATURE_COMPARISON: SingleCoursePlanFeature[] = [
+  {
+    icon: <BarChart3 className="h-5 w-5 text-blue-500" />,
+    title: "Courses per month",
+    singleCourse: "1",
+    basic: "10",
+    pro: "Unlimited",
+    annual: "Unlimited",
+  },
+  {
+    icon: <BarChart3 className="h-5 w-5 text-blue-500" />,
+    title: "Analytics",
+    singleCourse: "Basic",
+    basic: "Basic",
+    pro: "Advanced",
+    annual: "Advanced",
+  },
+  {
+    icon: <User className="h-5 w-5 text-blue-500" />,
+    title: "Support",
+    singleCourse: "Email",
+    basic: "Email",
+    pro: "Priority",
+    annual: "Priority",
+  },
+  {
+    icon: <Shield className="h-5 w-5 text-blue-500" />,
+    title: "Course certificates",
+    singleCourse: true,
+    basic: false,
+    pro: true,
+    annual: true,
+  },
+  {
+    icon: <Calendar className="h-5 w-5 text-blue-500" />,
+    title: "Access period",
+    singleCourse: "Lifetime",
+    basic: "Monthly",
+    pro: "Monthly",
+    annual: "Annual",
+  },
+  {
+    icon: <CreditCard className="h-5 w-5 text-blue-500" />,
+    title: "Annual savings",
+    singleCourse: "N/A",
+    basic: "None",
+    pro: "None",
+    annual: "20%",
+  },
+];
+
+const BUSINESS_FEATURE_COMPARISON: TeamPlanFeature[] = [
+  {
+    icon: <Users className="h-5 w-5 text-blue-500" />,
+    title: "User licenses",
+    team: "10",
+    business: "25",
+    enterprise: "Unlimited",
+  },
+  {
+    icon: <Briefcase className="h-5 w-5 text-blue-500" />,
+    title: "Team management",
+    team: "Basic",
+    business: "Advanced",
+    enterprise: "Enterprise-grade",
+  },
+  {
+    icon: <BarChart3 className="h-5 w-5 text-blue-500" />,
+    title: "Custom learning paths",
+    team: false,
+    business: true,
+    enterprise: true,
+  },
+  {
+    icon: <BarChart3 className="h-5 w-5 text-blue-500" />,
+    title: "Reporting",
+    team: "Basic",
+    business: "Advanced",
+    enterprise: "Custom",
+  },
+  {
+    icon: <User className="h-5 w-5 text-blue-500" />,
+    title: "Support",
+    team: "Email",
+    business: "Priority",
+    enterprise: "Dedicated manager",
+  },
+  {
+    icon: <Shield className="h-5 w-5 text-blue-500" />,
+    title: "API access",
+    team: false,
+    business: false,
+    enterprise: true,
+  },
+  {
+    icon: <Shield className="h-5 w-5 text-blue-500" />,
+    title: "SSO authentication",
+    team: false,
+    business: false,
+    enterprise: true,
+  },
+];
+
+export default function TierComparisonWizard({ courseId, courseTitle }: TierComparisonWizardProps) {
+  const [selectedTab, setSelectedTab] = useState(courseId ? "single-course" : "individual");
+  const [selectedPlan, setSelectedPlan] = useState<number | null>(null);
+  const [, navigate] = useLocation();
+  const { toast } = useToast();
+  const [currency, setCurrency] = useState<"USD" | "GBP" | "EUR">("USD");
+  
+  // Currency conversion rates
+  const exchangeRates = {
+    USD: 1,
+    GBP: 0.78,
+    EUR: 0.91
+  };
+  
+  // Currency symbols
+  const currencySymbols = {
+    USD: "$",
+    GBP: "£",
+    EUR: "€"
+  };
+  
+  // Course prices in USD (base prices before conversion)
+  const coursePrices = {
+    basic: 29,
+    intermediate: 39,
+    advanced: 49,
+    specialization: 59
+  };
+  
+  // Convert price to selected currency
+  const convertPrice = (priceUSD: number) => {
+    return Math.round(priceUSD * exchangeRates[currency]);
+  };
+
+  const { data: plans, isLoading } = useQuery<SubscriptionPlan[]>({
+    queryKey: ["/api/subscription-plans"],
+  });
+
+  // Filter plans based on selected tab
+  const filteredPlans = plans?.filter((plan) => {
+    if (selectedTab === "individual") {
+      return !plan.name.includes("Team") && 
+             !plan.name.includes("Business") && 
+             !plan.name.includes("Enterprise");
+    } else {
+      return plan.name.includes("Team") || 
+             plan.name.includes("Business") || 
+             plan.name.includes("Enterprise");
+    }
+  });
+
+  const selectPlan = (planId: number) => {
+    setSelectedPlan(planId);
+    navigate(`/subscriptions?planId=${planId}`);
+  };
+
+  const renderCheckmark = (value: boolean | string) => {
+    if (value === true) {
+      return <CheckCircle className="h-5 w-5 text-green-500" />;
+    } else if (value === false) {
+      return <span className="text-gray-300">—</span>;
+    } else {
+      return <span>{value}</span>;
+    }
+  };
+
+  return (
+    <div className="w-full max-w-7xl mx-auto px-4 py-8">
+      <div className="text-center mb-10">
+        <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
+          Choose the Right Plan for You
+        </h1>
+        <p className="mt-3 text-lg text-gray-600">
+          Compare our subscription plans and find the perfect fit for your learning journey
+        </p>
+        <div className="mt-6 flex justify-center">
+          <div className="flex items-center space-x-2 bg-gray-100 p-1 rounded-lg">
+            <button
+              onClick={() => setCurrency("USD")}
+              className={`px-4 py-2 rounded-md ${
+                currency === "USD" 
+                  ? "bg-white shadow-sm" 
+                  : "hover:bg-gray-200"
+              }`}
+            >
+              $ USD
+            </button>
+            <button
+              onClick={() => setCurrency("GBP")}
+              className={`px-4 py-2 rounded-md ${
+                currency === "GBP" 
+                  ? "bg-white shadow-sm" 
+                  : "hover:bg-gray-200"
+              }`}
+            >
+              £ GBP
+            </button>
+            <button
+              onClick={() => setCurrency("EUR")}
+              className={`px-4 py-2 rounded-md ${
+                currency === "EUR" 
+                  ? "bg-white shadow-sm" 
+                  : "hover:bg-gray-200"
+              }`}
+            >
+              € EUR
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <Tabs 
+        defaultValue="individual" 
+        value={selectedTab}
+        onValueChange={setSelectedTab}
+        className="w-full"
+      >
+        <div className="flex justify-center mb-8">
+          <TabsList className="grid w-full max-w-md grid-cols-2">
+            <TabsTrigger value="individual" className="text-lg py-3">
+              <User className="mr-2 h-5 w-5" />
+              Individual
+            </TabsTrigger>
+            <TabsTrigger value="business" className="text-lg py-3">
+              <Briefcase className="mr-2 h-5 w-5" />
+              Business
+            </TabsTrigger>
+          </TabsList>
+        </div>
+
+        <TabsContent value="individual" className="mt-4">
+          {isLoading ? (
+            <div className="flex justify-center">
+              <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+                {/* Single Course Card */}
+                <Card className="relative overflow-hidden transition-all duration-300 hover:shadow-md">
+                  <CardHeader>
+                    <CardTitle className="text-2xl">
+                      Single Course
+                    </CardTitle>
+                    <CardDescription>
+                      Purchase only the courses you need
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="mb-6">
+                      <p className="text-3xl font-bold">{currencySymbols[currency]}{convertPrice(29)}</p>
+                      <p className="text-sm text-gray-500">
+                        per course
+                      </p>
+                    </div>
+                    <ul className="space-y-2">
+                      <li className="flex items-center">
+                        <CheckCircle className="h-5 w-5 text-green-500 mr-2" />
+                        <span>Full access to one course</span>
+                      </li>
+                      <li className="flex items-center">
+                        <CheckCircle className="h-5 w-5 text-green-500 mr-2" />
+                        <span>Course certificate</span>
+                      </li>
+                      <li className="flex items-center">
+                        <CheckCircle className="h-5 w-5 text-green-500 mr-2" />
+                        <span>Basic analytics</span>
+                      </li>
+                      <li className="flex items-center">
+                        <CheckCircle className="h-5 w-5 text-green-500 mr-2" />
+                        <span>Lifetime access</span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                  <CardFooter>
+                    <Button 
+                      className="w-full"
+                      onClick={() => {
+                        navigate("/courses");
+                        toast({
+                          title: "Browse Courses",
+                          description: "Choose the course you want to purchase",
+                        });
+                      }}
+                      variant="outline"
+                    >
+                      Browse Courses
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </CardFooter>
+                </Card>
+                
+                {/* Subscription Plans */}
+                {filteredPlans?.map((plan) => (
+                  <Card 
+                    key={plan.id}
+                    className={`relative overflow-hidden transition-all duration-300 ${
+                      plan.name === "Pro" 
+                        ? "border-blue-500 shadow-lg shadow-blue-100" 
+                        : "hover:shadow-md"
+                    }`}
+                  >
+                    {plan.name === "Pro" && (
+                      <div className="absolute top-0 right-0">
+                        <Badge className="rounded-bl-lg rounded-tr-lg bg-blue-500 text-white">
+                          Most Popular
+                        </Badge>
+                      </div>
+                    )}
+                    <CardHeader>
+                      <CardTitle className="text-2xl">
+                        {plan.name}
+                      </CardTitle>
+                      <CardDescription>
+                        {plan.description}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="mb-6">
+                        <p className="text-3xl font-bold">{currencySymbols[currency]}{convertPrice(Number(plan.price))}</p>
+                        <p className="text-sm text-gray-500">
+                          per {plan.period === "MONTHLY" ? "month" : "year"}
+                        </p>
+                      </div>
+                      <ul className="space-y-2">
+                        {(plan.features as string[])?.map((feature, i) => (
+                          <li key={i} className="flex items-center">
+                            <CheckCircle className="h-5 w-5 text-green-500 mr-2" />
+                            <span>{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                    <CardFooter>
+                      <Button 
+                        className="w-full"
+                        onClick={() => selectPlan(plan.id)}
+                        variant={plan.name === "Pro" ? "default" : "outline"}
+                      >
+                        {plan.name === "Pro" ? "Recommended" : "Select"} 
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Button>
+                    </CardFooter>
+                  </Card>
+                ))}
+              </div>
+
+              <div className="mt-16 bg-white rounded-xl border p-6 shadow-sm">
+                <h2 className="text-2xl font-semibold mb-6">Detailed Feature Comparison</h2>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b">
+                        <th className="px-6 py-4 text-left">Feature</th>
+                        <th className="px-6 py-4 text-center">Single Course</th>
+                        <th className="px-6 py-4 text-center">Basic</th>
+                        <th className="px-6 py-4 text-center">Pro</th>
+                        <th className="px-6 py-4 text-center">Annual Pro</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {INDIVIDUAL_FEATURE_COMPARISON.map((feature, i) => (
+                        <tr key={i} className="border-b hover:bg-gray-50">
+                          <td className="px-6 py-4">
+                            <div className="flex items-center">
+                              {feature.icon}
+                              <span className="ml-2">{feature.title}</span>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 text-center">
+                            {renderCheckmark(feature.singleCourse)}
+                          </td>
+                          <td className="px-6 py-4 text-center">
+                            {renderCheckmark(feature.basic)}
+                          </td>
+                          <td className="px-6 py-4 text-center">
+                            {renderCheckmark(feature.pro)}
+                          </td>
+                          <td className="px-6 py-4 text-center">
+                            {renderCheckmark(feature.annual)}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </>
+          )}
+        </TabsContent>
+
+        <TabsContent value="business" className="mt-4">
+          {isLoading ? (
+            <div className="flex justify-center">
+              <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                <Card className="overflow-hidden transition-all duration-300 hover:shadow-md">
+                  <CardHeader>
+                    <CardTitle className="text-2xl">Team</CardTitle>
+                    <CardDescription>
+                      Perfect for small teams getting started
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="mb-6">
+                      <p className="text-3xl font-bold">{currencySymbols[currency]}{convertPrice(99)}</p>
+                      <p className="text-sm text-gray-500">per month</p>
+                    </div>
+                    <ul className="space-y-2">
+                      {BUSINESS_FEATURES.team.map((feature, i) => (
+                        <li key={i} className="flex items-center">
+                          <CheckCircle className="h-5 w-5 text-green-500 mr-2" />
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                  <CardFooter>
+                    <Button 
+                      className="w-full" 
+                      variant="outline"
+                      onClick={() => {
+                        toast({
+                          title: "Coming Soon",
+                          description: "Team plans will be available soon!",
+                        });
+                      }}
+                    >
+                      Select <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </CardFooter>
+                </Card>
+
+                <Card className="relative overflow-hidden transition-all duration-300 border-blue-500 shadow-lg shadow-blue-100">
+                  <div className="absolute top-0 right-0">
+                    <Badge className="rounded-bl-lg rounded-tr-lg bg-blue-500 text-white">
+                      Most Popular
+                    </Badge>
+                  </div>
+                  <CardHeader>
+                    <CardTitle className="text-2xl">Business</CardTitle>
+                    <CardDescription>
+                      Advanced features for growing organizations
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="mb-6">
+                      <p className="text-3xl font-bold">{currencySymbols[currency]}{convertPrice(299)}</p>
+                      <p className="text-sm text-gray-500">per month</p>
+                    </div>
+                    <ul className="space-y-2">
+                      {BUSINESS_FEATURES.business.map((feature, i) => (
+                        <li key={i} className="flex items-center">
+                          <CheckCircle className="h-5 w-5 text-green-500 mr-2" />
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                  <CardFooter>
+                    <Button 
+                      className="w-full"
+                      onClick={() => {
+                        toast({
+                          title: "Coming Soon",
+                          description: "Business plans will be available soon!",
+                        });
+                      }}
+                    >
+                      Recommended <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </CardFooter>
+                </Card>
+
+                <Card className="overflow-hidden transition-all duration-300 hover:shadow-md">
+                  <CardHeader>
+                    <CardTitle className="text-2xl">Enterprise</CardTitle>
+                    <CardDescription>
+                      Custom solutions for large organizations
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="mb-6">
+                      <p className="text-3xl font-bold">Custom</p>
+                      <p className="text-sm text-gray-500">contact sales</p>
+                    </div>
+                    <ul className="space-y-2">
+                      {BUSINESS_FEATURES.enterprise.map((feature, i) => (
+                        <li key={i} className="flex items-center">
+                          <CheckCircle className="h-5 w-5 text-green-500 mr-2" />
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                  <CardFooter>
+                    <Button 
+                      className="w-full" 
+                      variant="outline"
+                      onClick={() => {
+                        toast({
+                          title: "Contact Sales",
+                          description: "Our team will reach out to discuss custom pricing.",
+                        });
+                      }}
+                    >
+                      Contact Sales <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </CardFooter>
+                </Card>
+              </div>
+
+              <div className="mt-16 bg-white rounded-xl border p-6 shadow-sm">
+                <h2 className="text-2xl font-semibold mb-6">Detailed Feature Comparison</h2>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b">
+                        <th className="px-6 py-4 text-left">Feature</th>
+                        <th className="px-6 py-4 text-center">Team</th>
+                        <th className="px-6 py-4 text-center">Business</th>
+                        <th className="px-6 py-4 text-center">Enterprise</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {BUSINESS_FEATURE_COMPARISON.map((feature, i) => (
+                        <tr key={i} className="border-b hover:bg-gray-50">
+                          <td className="px-6 py-4">
+                            <div className="flex items-center">
+                              {feature.icon}
+                              <span className="ml-2">{feature.title}</span>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 text-center">
+                            {renderCheckmark(feature.team)}
+                          </td>
+                          <td className="px-6 py-4 text-center">
+                            {renderCheckmark(feature.business)}
+                          </td>
+                          <td className="px-6 py-4 text-center">
+                            {renderCheckmark(feature.enterprise)}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </>
+          )}
+        </TabsContent>
+      </Tabs>
+      
+      {/* FAQ Section */}
+      <div className="mt-16 bg-white rounded-xl border p-8 shadow-sm">
+        <h2 className="text-2xl font-semibold mb-8 text-center">Frequently Asked Questions</h2>
+        
+        <div className="grid md:grid-cols-2 gap-8">
+          <div>
+            <h3 className="text-lg font-medium mb-3 text-blue-700">Can I switch plans later?</h3>
+            <p className="text-gray-600">
+              Yes, you can upgrade or downgrade your plan at any time. Your billing will be prorated based on the time remaining in your current billing cycle.
+            </p>
+          </div>
+          
+          <div>
+            <h3 className="text-lg font-medium mb-3 text-blue-700">Is there a refund policy?</h3>
+            <p className="text-gray-600">
+              We offer a 14-day money-back guarantee for all new subscriptions if you're not satisfied with the service.
+            </p>
+          </div>
+          
+          <div>
+            <h3 className="text-lg font-medium mb-3 text-blue-700">What payment methods do you accept?</h3>
+            <p className="text-gray-600">
+              We accept all major credit cards (Visa, Mastercard, American Express), PayPal, and bank transfers for annual plans.
+            </p>
+          </div>
+          
+          <div>
+            <h3 className="text-lg font-medium mb-3 text-blue-700">Are there discounts for annual payments?</h3>
+            <p className="text-gray-600">
+              Yes, you save 20% when you choose annual billing compared to paying monthly for the same plan.
+            </p>
+          </div>
+          
+          <div>
+            <h3 className="text-lg font-medium mb-3 text-blue-700">How do team licenses work?</h3>
+            <p className="text-gray-600">
+              Team licenses are assigned by the company administrator. Each user gets their own account with personalized progress tracking.
+            </p>
+          </div>
+          
+          <div>
+            <h3 className="text-lg font-medium mb-3 text-blue-700">Can I get a custom plan for my company?</h3>
+            <p className="text-gray-600">
+              Yes, for organizations with specific needs, we offer custom enterprise solutions. Contact our sales team to discuss your requirements.
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      <div className="mt-16 text-center">
+        <h3 className="text-xl font-semibold mb-4">Still have questions?</h3>
+        <p className="text-gray-600 mb-6">
+          Our team is ready to help you find the perfect solution for your learning needs.
+        </p>
+        <Button 
+          variant="outline" 
+          size="lg"
+          onClick={() => {
+            toast({
+              title: "Contact Support",
+              description: "Our support team will reach out shortly to help you choose the right plan.",
+            });
+          }}
+        >
+          Talk to an Expert
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+export default TierComparisonWizard;
