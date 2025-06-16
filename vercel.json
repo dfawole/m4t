@@ -9,10 +9,10 @@
       }
     },
     {
-      "src": "client/src/**",
+      "src": "client/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "client/dist"
+        "distDir": "dist"
       }
     }
   ],
@@ -28,9 +28,7 @@
     {
       "src": "/assets/(.*)",
       "dest": "client/dist/assets/$1",
-      "headers": {
-        "Content-Type": "application/javascript"
-      }
+      "headers": { "Content-Type": "application/javascript" }
     },
     {
       "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot))",
