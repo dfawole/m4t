@@ -12,7 +12,7 @@
     "tsc": "tsc --noEmit",
     "tsc:watch": "tsc --noEmit --watch",
     "check": "tsc",
-    "db:migrate": "drizzle-kit migrate",
+    "db:migrate": "drizzle-kit push",
     "db:push": "drizzle-kit push",
     "db:seed-complete": "ts-node --esm --transpile-only server/seed-complete.ts",
     "db:seed-quick": "ts-node --esm --transpile-only server/quick-seed.ts",
