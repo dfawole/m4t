@@ -17,8 +17,8 @@
     "db:seed-complete": "ts-node --esm --transpile-only server/seed-complete.ts",
     "db:seed-quick": "ts-node --esm --transpile-only server/quick-seed.ts",
     "db:seed": "tsx server/seed-working.ts",
-    "db-dev:seed-complete": "tsx server/seed-complete.ts",
-    "db-dev:seed-quick": "tsx server/quick-seed.ts",
+    "db-dev:seed-complete-dev": "tsx server/seed-complete.ts",
+    "db-dev:seed-quick-dev": "tsx server/quick-seed.ts",
     "db:reset": "drizzle-kit push && npm run db:seed",
     "db:seed-uat": "tsx server/seed-uat.ts",
     "setup": "npm run db:push && npm run db:seed-complete"
