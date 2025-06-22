@@ -1,0 +1,556 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.animate-gradient-background {
+  background-size: 200% 200%;
+  animation: gradient 15s ease infinite;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.5s ease-out forwards;
+}
+
+/* Analytics Dashboard Animation & Styling */
+.chart-loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.chart-loading::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(90deg, 
+    rgba(255,255,255,0) 0%, 
+    rgba(255,255,255,0.15) 50%, 
+    rgba(255,255,255,0) 100%);
+  animation: shimmer 1.5s infinite;
+  transform: translateX(-100%);
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-slide-in {
+  animation: slideIn 0.5s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.5s ease-out forwards;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.sparkline-container {
+  height: 40px;
+  width: 80px;
+  margin-left: 10px;
+}
+
+.performance-indicator {
+  border-radius: 4px;
+  padding: 6px 8px;
+}
+
+.performance-high {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #059669;
+  border-left: 3px solid #10b981;
+}
+
+.performance-medium {
+  background-color: rgba(245, 158, 11, 0.1);
+  color: #d97706;
+  border-left: 3px solid #f59e0b;
+}
+
+.performance-low {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+  border-left: 3px solid #ef4444;
+}
+
+.student-insight {
+  transition: all 0.3s ease;
+}
+
+.student-insight:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Analytics dashboard enhancements */
+@keyframes pulse {
+  0% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+  100% { opacity: 0.4; }
+}
+
+@keyframes slide-in-right {
+  0% { transform: translateX(20px); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slide-in-bottom {
+  0% { transform: translateY(20px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes scale-in {
+  0% { transform: scale(0.95); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.chart-loading {
+  animation: pulse 1.5s infinite;
+}
+
+.animate-slide-in {
+  animation: slide-in-right 0.4s ease-out forwards;
+}
+
+.animate-slide-in-bottom {
+  animation: slide-in-bottom 0.4s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.3s ease-out forwards;
+}
+
+.sparkline-container {
+  height: 24px;
+  width: 80px;
+}
+
+.student-insight {
+  transition: all 0.2s ease;
+}
+
+.student-insight:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.tooltip-enhanced {
+  background-color: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  padding: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  max-width: 280px;
+}
+
+.performance-indicator {
+  position: relative;
+  padding-left: 12px;
+}
+
+.performance-indicator::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.performance-high::before {
+  background-color: #10b981;
+}
+
+.performance-medium::before {
+  background-color: #f59e0b;
+}
+
+.performance-low::before {
+  background-color: #ef4444;
+}
+
+:root {
+  --background: 210 40% 98%;
+  --foreground: 222.2 84% 4.9%;
+  --gradient-start: 221.2 83% 53.3%;
+  --gradient-end: 263.4 70% 50.4%;
+  
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+  
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+  
+  --primary: 221.2 83% 53.3%;
+  --primary-foreground: 210 40% 98%;
+  
+  --secondary: 210 40% 96.1%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
+  
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  
+  --accent: 210 40% 96.1%;
+  --accent-foreground: 222.2 47.4% 11.2%;
+  
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 221.2 83% 53.3%;
+  
+  --radius: 0.5rem;
+}
+
+.dark {
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 40% 98%;
+  
+  --card: 222.2 84% 4.9%;
+  --card-foreground: 210 40% 98%;
+  
+  --popover: 222.2 84% 4.9%;
+  --popover-foreground: 210 40% 98%;
+  
+  --primary: 217.2 91.2% 59.8%;
+  --primary-foreground: 222.2 47.4% 11.2%;
+  
+  --secondary: 217.2 32.6% 17.5%;
+  --secondary-foreground: 210 40% 98%;
+  
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.2% 65.1%;
+  
+  --accent: 217.2 32.6% 17.5%;
+  --accent-foreground: 210 40% 98%;
+  
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 210 40% 98%;
+  
+  --border: 217.2 32.6% 17.5%;
+  --input: 217.2 32.6% 17.5%;
+  --ring: 224.3 76.3% 48%;
+}
+
+body {
+  background: linear-gradient(135deg, 
+    hsl(var(--background)), 
+    hsl(var(--background)), 
+    hsl(210 40% 93%),
+    hsl(var(--background))
+  );
+  background-attachment: fixed;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Removed background gradient at the top */
+
+.chart-card {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03);
+  transition: all 0.3s ease-in-out;
+  border: 1px solid rgba(226, 232, 240, 0.7);
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.85);
+  overflow: hidden;
+}
+
+.chart-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.06);
+  border-color: rgba(191, 219, 254, 0.5);
+}
+
+.chart-controls {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background: rgba(248, 250, 252, 0.7);
+  border-radius: 8px;
+  border: 1px solid rgba(226, 232, 240, 0.5);
+}
+
+.chart-controls button, 
+.chart-controls select {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  background: white;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.chart-controls button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+  border-color: rgba(191, 219, 254, 0.8);
+}
+
+.recharts-wrapper {
+  margin: 0 auto;
+}
+
+.recharts-default-tooltip {
+  border-radius: 8px !important;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08) !important;
+  padding: 1rem !important;
+  border: none !important;
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+.recharts-tooltip-item {
+  padding: 4px 0 !important;
+  font-size: 0.9rem !important;
+}
+
+.recharts-cartesian-axis-tick-value {
+  font-size: 0.7rem;
+  fill: rgba(100, 116, 139, 0.8) !important;
+}
+
+.recharts-legend-item {
+  margin-right: 1.25rem !important;
+}
+
+.recharts-legend-item-text {
+  font-size: 0.8rem !important;
+  color: rgba(71, 85, 105, 0.9) !important;
+}
+
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: rgba(226, 232, 240, 0.6) !important;
+}
+
+.recharts-active-dot {
+  r: 6 !important;
+  stroke-width: 2px !important;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.15));
+}
+
+/* Card title styling */
+.card-title {
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+  line-height: 1.25 !important;
+}
+
+.card-description {
+  font-size: 0.8rem !important;
+  opacity: 0.85 !important;
+  margin-top: 0.25rem !important;
+}
+
+/* Fix for Time Distribution widget */
+.time-distribution-card .recharts-wrapper {
+  margin: 0 auto !important;
+  width: 100% !important;
+  height: 300px !important;
+  overflow: visible !important;
+}
+
+.time-distribution-card .recharts-surface {
+  overflow: visible !important;
+}
+
+/* Fix for Programming Skills widget */
+.programming-skills-card {
+  min-height: 350px !important;
+}
+
+.programming-skills-card .recharts-legend {
+  font-size: 0.8rem !important;
+}
+
+/* Tips styling */
+.tooltip-tip {
+  font-size: 0.75rem !important;
+  line-height: 1.4 !important;
+  max-width: 240px !important;
+  opacity: 0.9 !important;
+}
+
+@media (max-width: 640px) {
+  .chart-controls {
+    flex-direction: column;
+  }
+}
+
+:root {
+      --background: 0 0% 100%;
+--foreground: 20 14.3% 4.1%;
+--muted: 60 4.8% 95.9%;
+--muted-foreground: 25 5.3% 44.7%;
+--popover: 0 0% 100%;
+--popover-foreground: 20 14.3% 4.1%;
+--card: 0 0% 100%;
+--card-foreground: 20 14.3% 4.1%;
+--border: 20 5.9% 90%;
+--input: 20 5.9% 90%;
+--primary: 207 90% 54%;
+--primary-foreground: 211 100% 99%;
+--secondary: 60 4.8% 95.9%;
+--secondary-foreground: 24 9.8% 10%;
+--accent: 60 4.8% 95.9%;
+--accent-foreground: 24 9.8% 10%;
+--destructive: 0 84.2% 60.2%;
+--destructive-foreground: 60 9.1% 97.8%;
+--ring: 20 14.3% 4.1%;
+--radius: 0.5rem;
+  }
+  .dark {
+      --background: 240 10% 3.9%;
+--foreground: 0 0% 98%;
+--muted: 240 3.7% 15.9%;
+--muted-foreground: 240 5% 64.9%;
+--popover: 240 10% 3.9%;
+--popover-foreground: 0 0% 98%;
+--card: 240 10% 3.9%;
+--card-foreground: 0 0% 98%;
+--border: 240 3.7% 15.9%;
+--input: 240 3.7% 15.9%;
+--primary: 207 90% 54%;
+--primary-foreground: 211 100% 99%;
+--secondary: 240 3.7% 15.9%;
+--secondary-foreground: 0 0% 98%;
+--accent: 240 3.7% 15.9%;
+--accent-foreground: 0 0% 98%;
+--destructive: 0 62.8% 30.6%;
+--destructive-foreground: 0 0% 98%;
+--ring: 240 4.9% 83.9%;
+--radius: 0.5rem;
+  }
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+}
+
+/* Custom animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+.animate-slide-up {
+  animation: slideInUp 0.6s ease-out;
+}
+
+.animate-staggered-fade {
+  opacity: 0;
+  animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+.animate-staggered-fade:nth-child(1) { animation-delay: 0.1s; }
+.animate-staggered-fade:nth-child(2) { animation-delay: 0.2s; }
+.animate-staggered-fade:nth-child(3) { animation-delay: 0.3s; }
+.animate-staggered-fade:nth-child(4) { animation-delay: 0.4s; }
+.animate-staggered-fade:nth-child(5) { animation-delay: 0.5s; }
+.animate-staggered-fade:nth-child(6) { animation-delay: 0.6s; }
+
+.animate-pulse-on-hover:hover {
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.bg-gradient-shimmer {
+  background: linear-gradient(90deg, 
+    rgba(var(--primary), 0.1), 
+    rgba(var(--primary), 0.2), 
+    rgba(var(--primary), 0.1)
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite;
+}
