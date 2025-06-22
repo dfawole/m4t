@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "NODE_ENV=development tsx server/index.ts",
     "build": "vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
-    "vercel-build": "npm run db:migrate && npm run db:seed-complete && vite build && esbuild server/index.ts --bundle --platform=node --format=esm --outdir=dist",
+    "vercel-build": "npm run db:migrate && npm run db:seed-complete && vite build && esbuild server/index.ts --bundle --platform=node --format=esm --outdir=dist --external:@babel/preset-typescript/package.json --external:lightningcss --external:lightningcss/*",
     "start": "NODE_ENV=production node dist/index.js",
     "start:deploy": "node server.js",
     "tsc": "tsc --noEmit",
@@ -17,8 +17,8 @@
     "db:seed-complete": "ts-node --esm --transpile-only server/seed-complete.ts",
     "db:seed-quick": "ts-node --esm --transpile-only server/quick-seed.ts",
     "db:seed": "tsx server/seed-working.ts",
-    "db:seed-complete": "tsx server/seed-complete.ts",
-    "db:seed-quick": "tsx server/quick-seed.ts",
+    "db-dev:seed-complete": "tsx server/seed-complete.ts",
+    "db-dev:seed-quick": "tsx server/quick-seed.ts",
     "db:reset": "drizzle-kit push && npm run db:seed",
     "db:seed-uat": "tsx server/seed-uat.ts",
     "setup": "npm run db:push && npm run db:seed-complete"
