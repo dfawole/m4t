@@ -222,7 +222,7 @@ async function seedCompleteDatabase() {
 			{
 				name: 'Basic',
 				description: 'Perfect for individual learners starting their journey',
-				price: '9.99',
+				price: 9.99,
 				period: 'MONTHLY',
 				features: [
 					'Access to 50+ courses',
@@ -235,7 +235,7 @@ async function seedCompleteDatabase() {
 			{
 				name: 'Professional',
 				description: 'Advanced features for serious learners and professionals',
-				price: '19.99',
+				price: 19.99,
 				period: 'MONTHLY',
 				features: [
 					'Access to all courses',
@@ -249,7 +249,7 @@ async function seedCompleteDatabase() {
 			{
 				name: 'Team',
 				description: 'Collaboration tools for teams and small businesses',
-				price: '49.99',
+				price: 49.99,
 				period: 'MONTHLY',
 				features: [
 					'All Professional features',
@@ -263,7 +263,7 @@ async function seedCompleteDatabase() {
 			{
 				name: 'Enterprise',
 				description: 'Full-scale solution for large organizations',
-				price: '199.99',
+				price: 199.99,
 				period: 'MONTHLY',
 				features: [
 					'All Team features',
