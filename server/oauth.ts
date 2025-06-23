@@ -2,8 +2,8 @@ import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { Strategy as GitHubStrategy } from 'passport-github2';
 import { Express } from 'express';
-import { storage } from './storage';
-import { generateToken } from './jwt';
+import { storage } from './storage.ts';
+import { generateToken } from './jwt.ts';
 import crypto from 'crypto';
 
 export function setupOAuth(app: Express) {
@@ -169,6 +169,12 @@ export function setupOAuth(app: Express) {
 			}
 		}
 	);
+
+	passport.serializeUser((user: any, done) => done(null, user.id));
+	passport.deserializeUser(async (id: string, done) => {
+		const user = await storage.getUser(id);
+		done(null, user || undefined);
+	});
 
 	// OAuth status endpoint
 	app.get('/api/auth/oauth-status', (req, res) => {
