@@ -2,8 +2,8 @@ import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { Strategy as GitHubStrategy } from 'passport-github2';
 import { Express } from 'express';
-import { storage } from './storage.ts';
-import { generateToken } from './jwt.ts';
+import { storage } from './storage.js';
+import { generateToken } from './jwt.js';
 import crypto from 'crypto';
 
 export function setupOAuth(app: Express) {

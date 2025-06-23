@@ -1,17 +1,17 @@
 //server/routes.ts
 import type { Express, Request, Response, NextFunction } from 'express';
 import { createServer, type Server } from 'http';
-import { db } from './db.ts';
-import { storage } from './storage.ts';
-import { jwtAuth, requireJwtAuth } from './jwtMiddleware.ts';
-import { registerGamificationRoutes } from './gamification.ts';
-import { registerCompanyOnboardingRoutes } from './companyOnboarding.ts';
-import { registerLicenseManagementRoutes } from './licenseManagement.ts';
-import { registerEmailVerificationRoutes } from './emailVerification.ts';
-import { setupOAuth } from './oauth.ts';
+import { db } from './db.js';
+import { storage } from './storage.js';
+import { jwtAuth, requireJwtAuth } from './jwtMiddleware.js';
+import { registerGamificationRoutes } from './gamification.js';
+import { registerCompanyOnboardingRoutes } from './companyOnboarding.js';
+import { registerLicenseManagementRoutes } from './licenseManagement.js';
+import { registerEmailVerificationRoutes } from './emailVerification.js';
+import { setupOAuth } from './oauth.js';
 import passport from 'passport';
-import { loginWithJwt, refreshAccessToken, logoutJwt, getCurrentUser } from './jwtRoutes.ts';
-import { generateAccessToken, verifyAccessToken } from './jwt.ts';
+import { loginWithJwt, refreshAccessToken, logoutJwt, getCurrentUser } from './jwtRoutes.js';
+import { generateAccessToken, verifyAccessToken } from './jwt.js';
 import { scrypt } from 'crypto';
 import { promisify } from 'util';
 import {
@@ -24,10 +24,10 @@ import {
 	TipContext,
 	learningTips,
 	users,
-} from '../shared/schema.ts';
+} from '../shared/schema.js';
 
 import { count, eq } from 'drizzle-orm';
-import userProfileRoute from './userProfile.ts';
+import userProfileRoute from './userProfile.js';
 
 const scryptAsync = promisify(scrypt);
 
