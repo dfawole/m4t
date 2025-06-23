@@ -10,14 +10,16 @@
     "client:build": "vite build --root client --outDir client/dist",
     "client:dev": "vite --root client",
     "server:build": "esbuild server/index.ts --platform=node --bundle --format=esm  --outdir=dist --external:@babel/preset-typescript/package.json --external:lightningcss --external:lightningcss/*",
-    "vercel-build": "npm run db:migrate && npm run db:seed && npm run build",
     "db:migrate": "drizzle-kit push",
     "db:seed": "tsx server/seed-complete.ts",
     "db:seed-quick": "tsx server/quick-seed.ts",
     "db:reset": "npm run db:migrate && npm run db:seed",
+    "vercel-build": "npm run db:migrate && npm run db:seed && npm run build",
+    "start": "NODE_ENV=production node dist/index.js",
     "tsc": "tsc --noEmit",
     "tsc:watch": "tsc --noEmit --watch",
     "check": "npm run tsc"
+    
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
