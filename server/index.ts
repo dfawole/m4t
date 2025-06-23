@@ -194,14 +194,14 @@ import path from 'path';
 import { randomBytes, scrypt } from 'crypto';
 import { promisify } from 'util';
 
-import { registerRoutes } from './routes.ts';
-import { setupVite, serveStatic, log } from './vite.ts';
-import { initializeGamification } from './initGamification.ts';
-import { jwtAuth } from './jwtMiddleware.ts';
+import { registerRoutes } from './routes.js';
+import { setupVite, serveStatic, log } from './vite.js';
+import { initializeGamification } from './initGamification.js';
+import { jwtAuth } from './jwtMiddleware.js';
 
-import { db } from './db.ts';
+import { db } from './db.js';
 // ← relative import of your shared schema
-import { users, UserRole, subscriptionPlans } from '../shared/schema.ts';
+import { users, UserRole, subscriptionPlans } from '../shared/schema.js';
 import { eq } from 'drizzle-orm';
 
 const scryptAsync = promisify(scrypt);
