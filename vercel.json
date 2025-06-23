@@ -26,6 +26,10 @@
       "dest": "server/index.ts"
     },
     {
+      "src": "/(.*)",
+      "dest": "index.html"
+    },
+    {
       "src": "/assets/(.*)",
       "dest": "client/dist/assets/$1",
       "headers": { "Content-Type": "application/javascript" }
