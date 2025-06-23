@@ -64,9 +64,20 @@ import {
 	type InsertChallenge,
 	type UserChallenge,
 	type InsertUserChallenge,
+	InsertUser,
+	licenseActivities,
 } from '@shared/schema';
 import { db } from './db';
 import { and, eq, sql, desc, asc, count, isNull, not, inArray, or } from 'drizzle-orm';
+
+export type InsertLicenseActivity = {
+	licenseId: string;
+	userId: string;
+	activity: string;
+	ipAddress?: string;
+	userAgent?: string;
+	timestamp: Date;
+};
 
 // Interface for storage operations
 export interface IStorage {
@@ -74,7 +85,7 @@ export interface IStorage {
 	getUser(id: string): Promise<User | undefined>;
 	getUserByUsernameOrEmail(usernameOrEmail: string): Promise<User | undefined>;
 	getUserByEmail(email: string): Promise<User | undefined>;
-	createUser(user: UpsertUser): Promise<User>;
+	createUser(user: InsertUser): Promise<User>;
 	upsertUser(user: UpsertUser): Promise<User>;
 	updateUserStripeInfo(
 		userId: string,
@@ -113,6 +124,9 @@ export interface IStorage {
 
 	// License operations
 	createLicense(license: InsertLicense): Promise<License>;
+	createLicenseActivity(
+		licenseActivity: InsertLicenseActivity
+	): Promise<InsertLicenseActivity | undefined>;
 	getLicense(id: number): Promise<License | undefined>;
 	getLicenseByKey(licenseKey: string): Promise<License | undefined>;
 	getCompanyLicenses(companyId: number): Promise<License[]>;
@@ -462,12 +476,12 @@ export class DatabaseStorage implements IStorage {
 		return user;
 	}
 
-	async getUserByUsernameOrEmail(usernameOrEmail: string): Promise<User | undefined> {
+	async getUserByUsernameOrEmail(usernameOrEmail: string): Promise<User | null> {
 		const [user] = await db
 			.select()
 			.from(users)
 			.where(or(eq(users.username, usernameOrEmail), eq(users.email, usernameOrEmail)));
-		return user;
+		return user || null;
 	}
 
 	async updateUserCompany(userId: string, companyId: number): Promise<User> {
@@ -498,21 +512,19 @@ export class DatabaseStorage implements IStorage {
 		return db.select().from(users);
 	}
 
-	async getUserByEmail(email: string): Promise<User | undefined> {
-		const [user] = await db.select().from(users).where(eq(users.email, email));
-		return user;
+	async getUserByEmail(email: string): Promise<User | null> {
+		const [user] = await db.select().from(users).where(eq(users.email, email)).limit(1);
+		return user || null;
 	}
 
-	async createUser(userData: UpsertUser): Promise<User> {
+	async createUser(userData: Omit<InsertUser, 'id'>): Promise<User> {
+		const id = crypto.randomUUID();
+
 		const [user] = await db
 			.insert(users)
-			.values({
-				...userData,
-				id: userData.id || crypto.randomUUID(),
-				createdAt: new Date(),
-				updatedAt: new Date(),
-			})
+			.values({ id, ...userData })
 			.returning();
+
 		return user;
 	}
 
@@ -634,7 +646,7 @@ export class DatabaseStorage implements IStorage {
 	// User Points operations
 	async createOrUpdateUserPoints(
 		userId: string,
-		data: Partial<InsertUserPoints>
+		data: Omit<InsertUserPoints, 'userId'>
 	): Promise<UserPoints> {
 		// Check if user points record exists
 		const existingPoints = await this.getUserPoints(userId);
@@ -840,6 +852,11 @@ export class DatabaseStorage implements IStorage {
 		const [streak] = await db.select().from(streaks).where(eq(streaks.userId, userId));
 
 		return streak;
+	}
+
+	async createLicenseActivity(data: InsertLicenseActivity): Promise<InsertLicenseActivity> {
+		await db.insert(licenseActivities).values(data);
+		return data;
 	}
 
 	// Challenge operations

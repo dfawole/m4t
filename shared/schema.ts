@@ -88,6 +88,7 @@ export const users = pgTable('users', {
 	updatedAt: timestamp('updated_at').defaultNow(),
 });
 
+export type InsertUser = typeof users.$inferInsert;
 export type UpsertUser = typeof users.$inferInsert;
 export type User = typeof users.$inferSelect;
 
@@ -130,7 +131,6 @@ export const subscriptionPlans = pgTable('subscription_plans', {
 	isActive: boolean('is_active').default(true),
 	createdAt: timestamp('created_at').defaultNow(),
 	updatedAt: timestamp('updated_at').defaultNow(),
-	maxUsers: integer('max_users').notNull(),
 	trialDays: integer('trial_days').notNull(),
 });
 
@@ -206,6 +206,31 @@ export const licensesRelations = relations(licenses, ({ one }) => ({
 	}),
 	user: one(users, {
 		fields: [licenses.userId],
+		references: [users.id],
+	}),
+}));
+
+export const licenseActivities = pgTable('license_activities', {
+	id: serial('id').primaryKey(),
+	licenseId: varchar('license_id', { length: 100 })
+		.notNull()
+		.references(() => licenses.licenseKey), // or .id if that’s your PK
+	userId: varchar('user_id', { length: 36 })
+		.notNull()
+		.references(() => users.id),
+	activity: text('activity').notNull(),
+	ipAddress: varchar('ip_address', { length: 50 }),
+	userAgent: varchar('user_agent', { length: 255 }),
+	timestamp: timestamp('timestamp').notNull(),
+});
+
+export const licenseActivitiesRelations = relations(licenseActivities, ({ one }) => ({
+	license: one(licenses, {
+		fields: [licenseActivities.licenseId],
+		references: [licenses.licenseKey], // or .id if that’s your PK
+	}),
+	user: one(users, {
+		fields: [licenseActivities.userId],
 		references: [users.id],
 	}),
 }));
@@ -591,6 +616,7 @@ export type CompanySubscription = typeof companySubscriptions.$inferSelect;
 
 export type InsertLicense = typeof licenses.$inferInsert;
 export type License = typeof licenses.$inferSelect;
+export type InsertLicenseActivity = typeof licenseActivities.$inferInsert;
 
 export type LessonCompletion = typeof lessonCompletions.$inferSelect;
 

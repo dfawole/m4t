@@ -252,6 +252,57 @@ export async function sendLicenseAssignmentEmail(
 	}
 }
 
+/**
+ * Notify the user that their license has been revoked.
+ */
+export async function sendLicenseRevokedEmail(
+	to: string,
+	licenseKey: string,
+	reason?: string
+): Promise<boolean> {
+	const subject = `Your license "${licenseKey}" has been revoked`;
+	const html = `
+    <div style="font-family: sans-serif; line-height:1.4">
+      <h2 style="color:#c53030">License Revoked</h2>
+      <p>Your license with key <strong>${licenseKey}</strong> has been <strong>revoked</strong>.</p>
+      ${reason ? `<p><em>Reason:</em> ${reason}</p>` : ''}
+      <p>If you believe this was a mistake, please contact support.</p>
+      <hr/>
+      <p style="font-size:0.85em;color:#666">
+        LearnEdge Team
+      </p>
+    </div>
+  `;
+
+	return sendEmail(to, subject, html);
+}
+
+/**
+ * Notify the user that their license has been suspended.
+ */
+export async function sendLicenseSuspendedEmail(
+	to: string,
+	licenseKey: string,
+	until: Date,
+	reason?: string
+): Promise<boolean> {
+	const subject = `Your license "${licenseKey}" has been suspended`;
+	const html = `
+    <div style="font-family: sans-serif; line-height:1.4">
+      <h2 style="color:#dd6b20">License Suspended</h2>
+      <p>Your license <strong>${licenseKey}</strong> is currently <strong>suspended</strong> until <strong>${until.toDateString()}</strong>.</p>
+      ${reason ? `<p><em>Reason:</em> ${reason}</p>` : ''}
+      <p>If you have any questions, please contact support.</p>
+      <hr/>
+      <p style="font-size:0.85em;color:#666">
+        LearnEdge Team
+      </p>
+    </div>
+  `;
+
+	return sendEmail(to, subject, html);
+}
+
 // Send enrollment confirmation email
 export async function sendEnrollmentConfirmationEmail(
 	email: string,
