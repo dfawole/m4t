@@ -9,7 +9,7 @@
       }
     },
     {
-      "src": "server/index.ts",
+      "src": "server/index.js",
       "use": "@vercel/node",
       "config": {
         "includeFiles": ["shared/**"]
@@ -17,8 +17,8 @@
     }
   ],
   "routes": [
-    { "src": "/api/(.*)",     "dest": "server/index.ts" },
-    { "src": "/health",       "dest": "server/index.ts" },
+    { "src": "/api/(.*)",     "dest": "server/index.js" },
+    { "src": "/health",       "dest": "server/index.js" },
     {
       "src": "/assets/(.*)",
       "dest": "client/dist/assets/$1",
