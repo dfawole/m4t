@@ -1,3 +1,4 @@
+//server/routes.ts
 import type { Express, Request, Response, NextFunction } from 'express';
 import { createServer, type Server } from 'http';
 import { db } from './db';
