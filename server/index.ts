@@ -193,16 +193,15 @@ import { createServer } from 'http';
 import path from 'path';
 import { randomBytes, scrypt } from 'crypto';
 import { promisify } from 'util';
-
 import { registerRoutes } from './routes.js';
 import { setupVite, serveStatic, log } from './vite.js';
 import { initializeGamification } from './initGamification.js';
 import { jwtAuth } from './jwtMiddleware.js';
-
 import { db } from './db.js';
 // ← relative import of your shared schema
 import { users, UserRole, subscriptionPlans } from '../shared/schema.js';
 import { eq } from 'drizzle-orm';
+import { seedCompleteDatabase } from './seed-complete.js';
 
 const scryptAsync = promisify(scrypt);
 
@@ -347,6 +346,16 @@ async function main() {
 		await setupVite(app, httpServer);
 	} else {
 		serveStatic(app);
+	}
+
+	if (process.env.SEED_ON_STARTUP === 'true') {
+		console.log(' Running full seed on startup…');
+		try {
+			await seedCompleteDatabase();
+			console.log('Seed complete');
+		} catch (err) {
+			console.error('Seed failed:', err);
+		}
 	}
 
 	const PORT = parseInt(process.env.PORT || '3001', 10);
