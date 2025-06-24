@@ -6,11 +6,10 @@
   "scripts": {
     "client:build": "vite build",
     "client:dev": "vite",
-    "start": "node dist/index.js",
     "server:dev": "NODE_ENV=development tsx server/index.ts",
-    "server:build": "esbuild server/index.ts --platform=node --bundle --format=esm --outdir=dist --external:@babel/preset-typescript/package.json --external:lightningcss --external:lightningcss/* --external:fsevents --external:*.node --loader:.node=file",
+    "server:build": "esbuild server/index.ts --platform=node --bundle --format=esm --outdir=dist --external:@babel/preset-typescript/package.json --external:lightningcss --external:lightningcss/* ",
     "dev": "concurrently \"npm run client:dev\" \"npm run server:dev\"",
-    "build": "npm ci && npm run client:build && npm run server:build",
+    "build": "npm run client:build && npm run server:build",
     "vercel-build": "npm run build",
     "db:migrate": "drizzle-kit push",
     "db:seed": "tsx server/seed-complete.ts",
