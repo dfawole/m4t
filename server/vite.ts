@@ -1,3 +1,4 @@
+// server/vite.ts
 import express, { type Express } from 'express';
 import fs from 'fs';
 import path from 'path';
@@ -8,6 +9,9 @@ import { nanoid } from 'nanoid';
 
 const viteLogger = createLogger();
 
+/**
+ * Simple timestamped logger
+ */
 export function log(message: string, source = 'express') {
 	const formattedTime = new Date().toLocaleTimeString('en-US', {
 		hour: 'numeric',
@@ -15,10 +19,12 @@ export function log(message: string, source = 'express') {
 		second: '2-digit',
 		hour12: true,
 	});
-
 	console.log(`${formattedTime} [${source}] ${message}`);
 }
 
+/**
+ * In development: spin up Vite in middleware mode (HMR, transforms, etc).
+ */
 export async function setupVite(app: Express, server: HttpServer) {
 	const serverOptions: ServerOptions = {
 		middlewareMode: true,
@@ -40,15 +46,16 @@ export async function setupVite(app: Express, server: HttpServer) {
 		appType: 'custom',
 	});
 
+	// Vite’s connect-style middleware
 	app.use(vite.middlewares);
+
+	// Serve index.html on all other routes, injecting HMR script
 	app.use('*', async (req, res, next) => {
 		const url = req.originalUrl;
-
 		try {
-			const clientTemplate = path.resolve(import.meta.dirname, '..', 'client', 'index.html');
-
-			// always reload the index.html file from disk incase it changes
+			const clientTemplate = path.resolve(process.cwd(), 'client/index.html');
 			let template = await fs.promises.readFile(clientTemplate, 'utf-8');
+			// Force reload on each request during dev
 			template = template.replace(`src="/src/main.tsx"`, `src="/src/main.tsx?v=${nanoid()}"`);
 			const page = await vite.transformIndexHtml(url, template);
 			res.status(200).set({ 'Content-Type': 'text/html' }).end(page);
@@ -59,19 +66,22 @@ export async function setupVite(app: Express, server: HttpServer) {
 	});
 }
 
+/**
+ * In production: serve the pre-built client from client/dist
+ */
 export function serveStatic(app: Express) {
-	const distPath = path.resolve(import.meta.dirname, 'public');
+	// The Vite build output lives at <repo-root>/client/dist
+	const distPath = path.resolve(process.cwd(), 'client/dist');
 
 	if (!fs.existsSync(distPath)) {
-		throw new Error(
-			`Could not find the build directory: ${distPath}, make sure to build the client first`
-		);
+		throw new Error(`Cannot find client build at ${distPath}. Please run \`npm run build\` first.`);
 	}
 
+	// Serve static assets
 	app.use(express.static(distPath));
 
-	// fall through to index.html if the file doesn't exist
-	app.use('*', (_req, res) => {
-		res.sendFile(path.resolve(distPath, 'index.html'));
+	// Single-page app fallback to index.html
+	app.get('*', (_req, res) => {
+		res.sendFile(path.join(distPath, 'index.html'));
 	});
 }
